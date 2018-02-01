@@ -3,8 +3,9 @@
 Plugin Name: GolfBox
 Description: GolfBox Kalender / Nyheder
 Author: Karsten Schmidt @ DLX
-Version: 1.3
+Version: 1.4
 Author URI: http://dlx.dk/kontakt
+License: GPLv2
 */
 
 // Shortcodes
