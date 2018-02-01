@@ -3,7 +3,7 @@
 Plugin Name: GolfBox
 Description: GolfBox Kalender / Nyheder
 Author: Karsten Schmidt @ DLX
-Version: 1.2
+Version: 1.3
 Author URI: http://dlx.dk/kontakt
 */
 
@@ -26,7 +26,11 @@ function golfbox_news( $vars ) {
     $params = array(
       'News_GUID' => $_GET['newsid'],
     );
-    $soap = $client->GetItem($params);
+    try {
+      $soap = $client->GetItem($params);
+    } catch (SoapFault $fault) {
+      return $fault->faultstring;
+    }
 
     if ($soap->GetItemResult->any) {
       $xml = simplexml_load_string($soap->GetItemResult->any);
@@ -51,7 +55,11 @@ function golfbox_news( $vars ) {
     $params = array(
       'HeadersOnly' => false,
     );
-    $soap = $client->GetList($params);
+    try {
+      $soap = $client->GetList($params);
+    } catch (SoapFault $fault) {
+      return $fault->faultstring;
+    }
 
     if ($soap->GetListResult->any) {
       $xml = simplexml_load_string($soap->GetListResult->any);
@@ -90,7 +98,11 @@ function golfbox_newsteaser( $vars ) {
   $params = array(
     'HeadersOnly' => false,
   );
-  $soap = $client->GetList($params);
+  try {
+    $soap = $client->GetList($params);
+  } catch (SoapFault $fault) {
+    return $fault->faultstring;
+  }
 
   if ($soap->GetListResult->any) {
     $xml = simplexml_load_string($soap->GetListResult->any);
@@ -196,7 +208,11 @@ function golfbox_calendar( $vars ) {
     'EndDate' => $year.'-'.$month.'-'.$days,
     'Type' => $vars['type'],
   );
-  $soap = $client->GetEvents($params);
+  try {
+    $soap = $client->GetEvents($params);
+  } catch (SoapFault $fault) {
+    return $fault->faultstring;
+  }
 
   if ($soap->GetEventsResult->any) {
     $xml = simplexml_load_string($soap->GetEventsResult->any);
@@ -318,7 +334,11 @@ function golfbox_calendar_items( $vars ) {
     'EndDate' => $enddate,
     'Type' => $vars['type'],
   );
-  $soap = $client->GetEvents($params);
+  try {
+    $soap = $client->GetEvents($params);
+  } catch (SoapFault $fault) {
+    return $fault->faultstring;
+  }
 
   if ($soap->GetEventsResult->any) {
     $xml = simplexml_load_string($soap->GetEventsResult->any);
