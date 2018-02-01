@@ -3,7 +3,7 @@
 Plugin Name: GolfBox
 Description: GolfBox Kalender / Nyheder
 Author: Karsten Schmidt @ DLX
-Version: 1.1
+Version: 1.2
 Author URI: http://dlx.dk/kontakt
 */
 
@@ -200,6 +200,8 @@ function golfbox_calendar( $vars ) {
 
   if ($soap->GetEventsResult->any) {
     $xml = simplexml_load_string($soap->GetEventsResult->any);
+
+    $popup = array();
 
     foreach ($xml->xpath('//Event') as $item)
     {
