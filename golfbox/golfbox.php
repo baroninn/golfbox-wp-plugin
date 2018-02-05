@@ -398,7 +398,7 @@ function golfbox_calendar_items( $vars ) {
 }
 
 function golfbox_connect_news() {
-  $wsdl_url = 'http://golfbox.dk/web/services/webservice/news.asmx?WSDL';
+  $wsdl_url = 'https://golfbox.dk/web/services/webservice/news.asmx?WSDL';
   $client = new SOAPClient($wsdl_url);
 
   $header = new SoapHeader('http://golfbox.net/web/services/webservice',
@@ -415,7 +415,7 @@ function golfbox_connect_news() {
 }
 
 function golfbox_connect_cal() {
-  $wsdl_url = 'http://golfbox.dk/web/services/webservice/calendar.asmx?WSDL';
+  $wsdl_url = 'https://golfbox.dk/web/services/webservice/calendar.asmx?WSDL';
   $client = new SOAPClient($wsdl_url);
 
   $header = new SoapHeader('http://golfbox.net/web/services/webservice',
