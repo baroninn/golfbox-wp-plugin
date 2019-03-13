@@ -18,12 +18,12 @@ add_shortcode( 'golfbox_calendar_items', 'golfbox_calendar_items' );
 function golfbox_news( $vars ) {
   define( 'DONOTCACHEPAGE', true );
 
-  if (!$vars['length']) $vars['length'] = 1000;
-  if (!$vars['readmore']) $vars['readmore'] = 'L&aelig;s mere';
+  if (!isset($vars['length'])) $vars['length'] = 1000;
+  if (!isset($vars['readmore'])) $vars['readmore'] = 'L&aelig;s mere';
 
   $client = golfbox_connect_news();
 
-  if ($_GET['newsid']) {
+  if (isset($_GET['newsid'])) {
     $params = array(
       'News_GUID' => $_GET['newsid'],
     );
@@ -92,7 +92,7 @@ function golfbox_news( $vars ) {
 function golfbox_newsteaser( $vars ) {
   define( 'DONOTCACHEPAGE', true );
 
-  if (!$vars['length']) $vars['length'] = 1000;
+  if (!isset($vars['length'])) $vars['length'] = 1000;
 
   $client = golfbox_connect_news();
 
@@ -135,11 +135,11 @@ function golfbox_newsteaser( $vars ) {
 function golfbox_calendar( $vars ) {
   define( 'DONOTCACHEPAGE', true );
 
-  if (!$vars['type']) $vars['type'] = 'All';
-  if (!$vars['monthnames']) $vars['monthnames'] = "Januar,Februar,Marts,April,Maj,Juni,Juli,August,September,Oktober,November,December";
-  if (!$vars['daynames']) $vars['daynames'] = "Ma,Ti,On,To,Fr,L&oslash;,S&oslash;";
-  if (!$vars['prevtext']) $vars['prevtext'] = "Forrige";
-  if (!$vars['nexttext']) $vars['nexttext'] = "N&aelig;ste";
+  if (!isset($vars['type'])) $vars['type'] = 'All';
+  if (!isset($vars['monthnames'])) $vars['monthnames'] = "Januar,Februar,Marts,April,Maj,Juni,Juli,August,September,Oktober,November,December";
+  if (!isset($vars['daynames'])) $vars['daynames'] = "Ma,Ti,On,To,Fr,L&oslash;,S&oslash;";
+  if (!isset($vars['prevtext'])) $vars['prevtext'] = "Forrige";
+  if (!isset($vars['nexttext'])) $vars['nexttext'] = "N&aelig;ste";
 
   wp_register_style('fancybox','//cdn.jsdelivr.net/fancybox/2.1.4/jquery.fancybox.css');
   wp_register_style('fancybox-buttons','//cdn.jsdelivr.net/fancybox/2.1.4/helpers/jquery.fancybox-buttons.css');
@@ -157,8 +157,8 @@ function golfbox_calendar( $vars ) {
   wp_enqueue_script('fancybox-media');
   wp_enqueue_script('fancybox-thumbs');
 
-  $month = ($_GET[calmonth]) ? $_GET[calmonth] : date("m");
-  $year = ($_GET[calyear]) ? $_GET[calyear] : date("Y");
+  $month = (isset($_GET['calmonth'])) ? $_GET['calmonth'] : date("m");
+  $year = (isset($_GET['calyear'])) ? $_GET['calyear'] : date("Y");
 
   $today = date("Y-m-d");
   
@@ -182,15 +182,17 @@ function golfbox_calendar( $vars ) {
   $nextyear = date("Y", mktime(0,0,0,$month+1,1,$year));
   $nextmonth = date("m", mktime(0,0,0,$month+1,1,$year));
 
-  $_GET[calmonth]=$prevmonth;
-  $_GET[calyear]=$prevyear;
+  $_GET['calmonth']=$prevmonth;
+  $_GET['calyear']=$prevyear;
+  $prevqs = "";
   foreach($_GET as $key => $value)
   {
     if ($prevqs) $prevqs .= "&amp;";
     $prevqs .= "$key=$value";
   }
-  $_GET[calmonth]=$nextmonth;
-  $_GET[calyear]=$nextyear;
+  $_GET['calmonth']=$nextmonth;
+  $_GET['calyear']=$nextyear;
+  $nextqs = "";
   foreach($_GET as $key => $value)
   {
     if ($nextqs) $nextqs .= "&amp;";
@@ -219,12 +221,14 @@ function golfbox_calendar( $vars ) {
     $xml = simplexml_load_string($soap->GetEventsResult->any);
 
     $popup = array();
+    $items = array();
 
     foreach ($xml->xpath('//Event') as $item)
     {
       list($daytmp,$null) = explode("-", $item->StartTime);
-      $items["$daytmp"]++;
+      $items["$daytmp"] = (isset($items["$daytmp"])) ? $items["$daytmp"]+1 : 1;
 
+      if (!isset($popup[$daytmp])) $popup[$daytmp] = "";
       $popup[$daytmp] .= '<b>'.htmlentities($item->Subject,ENT_QUOTES,"UTF-8").'</b><br />'.PHP_EOL;
       $popup[$daytmp] .= substr($item->StartTime,0,10).' - '.substr($item->StartTime,11,5).'-'.substr($item->EndTime,11,5).'<br />'.PHP_EOL;
       $popup[$daytmp] .= str_replace(array("&lt;","&gt;"),array("<",">"),htmlentities($item->Description,ENT_NOQUOTES,"UTF-8")).'<br /><br />'.PHP_EOL;
@@ -263,7 +267,7 @@ function golfbox_calendar( $vars ) {
       $class = 'golfbox_calendar_day_noevent';
       $day = ($i<10) ? "0".$i : $i;
       if ($today=="$year-$month-$day") $class = 'golfbox_calendar_day_today';
-      if ($items[$day])
+      if (isset($items[$day]))
       {
         $return .= '<td class="golfbox_calendar_day_event"><a href="#day'.$i.'" class="golfbox-popup golfbox_calendar_day_event">'.$i.'</a></td>';
       }
@@ -296,15 +300,15 @@ function golfbox_calendar( $vars ) {
 function golfbox_calendar_items( $vars ) {
   define( 'DONOTCACHEPAGE', true );
 
-  if (!$vars['type']) $vars['type'] = 'All';
-  if (!$vars['monthnames']) $vars['monthnames'] = "Januar,Februar,Marts,April,Maj,Juni,Juli,August,September,Oktober,November,December";
-  if (!$vars['daynames']) $vars['daynames'] = "Mandag,Tirsdag,Onsdag,Torsdag,Fredag,L&oslash;rdag,S&oslash;ndag";
+  if (!isset($vars['type'])) $vars['type'] = 'All';
+  if (!isset($vars['monthnames'])) $vars['monthnames'] = "Januar,Februar,Marts,April,Maj,Juni,Juli,August,September,Oktober,November,December";
+  if (!isset($vars['daynames'])) $vars['daynames'] = "Mandag,Tirsdag,Onsdag,Torsdag,Fredag,L&oslash;rdag,S&oslash;ndag";
 
   $montharr = explode(",", utf8_encode($vars['monthnames']));
   $dayarr = explode(",", utf8_encode($vars['daynames']));
 
   $month = date('n');
-  if ($_GET['month']) $month = $_GET['month']*1;
+  if (isset($_GET['month'])) $month = $_GET['month']*1;
   $year = date('Y');
 
   $numberofdays =  date ("t", mktime(0,0,0,$month,1,$year));
