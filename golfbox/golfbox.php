@@ -507,7 +507,6 @@ function golfbox_conf() {
   if (current_user_can('manage_options')) {
     ?>
     <div class="wrap">
-    <?php screen_icon(); ?>
     <h2>GolfBox <?=__('Settings')?></h2>
     <form method="post" action="options.php">
     <?php settings_fields( 'golfbox-options' ); ?>
