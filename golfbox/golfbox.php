@@ -18,6 +18,8 @@ add_shortcode( 'golfbox_calendar_items', 'golfbox_calendar_items' );
 function golfbox_news( $vars ) {
   define( 'DONOTCACHEPAGE', true );
 
+  if (!$vars) $vars = array();
+
   if (!isset($vars['length'])) $vars['length'] = 1000;
   if (!isset($vars['readmore'])) $vars['readmore'] = 'L&aelig;s mere';
 
@@ -92,6 +94,8 @@ function golfbox_news( $vars ) {
 function golfbox_newsteaser( $vars ) {
   define( 'DONOTCACHEPAGE', true );
 
+  if (!$vars) $vars = array();
+
   if (!isset($vars['length'])) $vars['length'] = 1000;
 
   $client = golfbox_connect_news();
@@ -134,6 +138,8 @@ function golfbox_newsteaser( $vars ) {
 
 function golfbox_calendar( $vars ) {
   define( 'DONOTCACHEPAGE', true );
+
+  if (!$vars) $vars = array();
 
   if (!isset($vars['type'])) $vars['type'] = 'All';
   if (!isset($vars['monthnames'])) $vars['monthnames'] = "Januar,Februar,Marts,April,Maj,Juni,Juli,August,September,Oktober,November,December";
@@ -300,6 +306,8 @@ function golfbox_calendar( $vars ) {
 function golfbox_calendar_items( $vars ) {
   define( 'DONOTCACHEPAGE', true );
 
+  if (!$vars) $vars = array();
+
   if (!isset($vars['type'])) $vars['type'] = 'All';
   if (!isset($vars['monthnames'])) $vars['monthnames'] = "Januar,Februar,Marts,April,Maj,Juni,Juli,August,September,Oktober,November,December";
   if (!isset($vars['daynames'])) $vars['daynames'] = "Mandag,Tirsdag,Onsdag,Torsdag,Fredag,L&oslash;rdag,S&oslash;ndag";
@@ -449,7 +457,7 @@ function golfbox_strip_stuff($in) {
                    '@&(cent|#162);@i',
                    '@&(pound|#163);@i',
                    '@&(copy|#169);@i',
-                   '@&#(\d+);@e');                    // evaluate as php
+                   );
 
   $replace = array ('',
                    '',
@@ -463,7 +471,7 @@ function golfbox_strip_stuff($in) {
                    chr(162),
                    chr(163),
                    chr(169),
-                   'chr(\1)');
+                   );
 
   $return = preg_replace($search,$replace,$in);
   $return = str_replace(".", ". ", $return);
